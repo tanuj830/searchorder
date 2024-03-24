@@ -97,7 +97,7 @@
   <script>
 
     const fetchOrders= async (orderid) => {
-      const res = await fetch(`http://localhost:8000/order/${orderid}`)
+      const res = await fetch(`https://searchorder.onrender.com/order/${orderid}`)
 const data = await res.json()
     }
     const handleSubmit = async () => {
@@ -107,11 +107,11 @@ const data = await res.json()
       const text2 = form.inputText2.value;
       if (text.length === 0 && text2 === 0) alert("You need to enter id");
       else {
-        const res = await fetch(`http://localhost:8000/customer/${text.length === 0 ? text2: text}`);
+        const res = await fetch(`https://searchorder.onrender.com/customer/${text.length === 0 ? text2: text}`);
         const data = await res.json();
         console.log(data);
         if (data.length > 0 || Object.keys(data).length > 0) {
-          const res = await fetch(`http://localhost:8000/order/${data.orders[0]}`);
+          const res = await fetch(`https://searchorder.onrender.com/order/${data.orders[0]}`);
           const data2 = await res.json()
           console.log(data2)
 
