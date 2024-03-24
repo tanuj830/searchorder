@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      background: #e6e7e1;
+
+      font-family: "Poppins", sans-serif;
+      font-weight: 400;
+      font-style: inherit;
+      width: 100vw;
+      height: 100vh;
+    }
+
+  </style>
+  <body class="py-5 lg:px-20 px-5">
+    <div class="">
+      <h3 class="text-center font-bold pb-2">SEARCH ORDER</h3>
+      <div class="shadow-lg w-full lg:w-96 bg-white rounded-full py-3 px-4">
+        <div class="relative border  rounded-full p-2 lg:p-4 w-fit">
+          <div
+          class="absolute text-xs"
+            style="
+              position: absolute;
+              top: -10px;
+              left: 3;
+              background: white;
+              font-size: small;
+            "
+          >
+            Search Order
+          </div>
+          <form class="text-xs flex  items-center lg:gap-8 justify-center gap-1  flex-col lg:flex-row  w-fit inline-block" name="form">
+           <div class="  flex items-center lg:w-1/4 w-full gap-2 ">
+            <div class=" flex items-center ">
+              <div class="mx-2">By </div> 
+              <input checked type="checkbox" name="orderid" id="" />
+              <div>OrderId</div>
+            </div>
+            <div class="flex items-center ">
+              <input type="checkbox" name="mobile" id="" /> <div>Mobile</div>
+            </div>
+            <div class="flex items-center ">
+              <input type="checkbox" name="name" id="" /> <div>Name</div>
+            </div>
+            <div class="flex items-center ">
+              <input type="checkbox" name="email" id="" /> <div>Email</div>
+            </div>
+           </div>
+           <div class="flex  gap-2 inline-block lg:hidden gap-2 ">
+
+            <div class=" w-full">
+              
+              <input type="text" class="w-full py-1 px-5 border border-black rounded-full outline-none hover:outline-black " id="inputText"  />
+             </div>
+             
+             <div class="w-fit ">
+               <button
+               id="searchBtn"
+               class="rounded-full bg-green-700 text-white text-xs px-3 py-1
+               ">
+               SEARCH 
+             </button>
+           </div>
+         </div>
+           <div class="w-4/5 hidden lg:flex  gap-4 items-center">
+            <div class=" w-full">
+             <input type="text" class="w-full py-1 px-5 border border-black rounded-full outline-none hover:outline-black " id="inputText2" />
+             </div>
+             <div class="w-1/4">
+               <button
+               id="searchBtn2"
+               class="rounded-full bg-green-700 text-white text-xs px-3 py-1
+               ">
+               SEARCH ORDER
+              </button>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+      <div id="info">
+        
+      </div>
+      <div id="allorders">
+
+      </div>
+  </body>
+  <script>
+
+    const fetchOrders= async (orderid) => {
+      const res = await fetch(`http://localhost:8000/order/${orderid}`)
+const data = await res.json()
+    }
+    const handleSubmit = async () => {
+      // const input = document.getElementsByClassName("inputText");
+      // const text = JSON.parse(input.value);
+      const text = form.inputText.value;
+      const text2 = form.inputText2.value;
+      if (text.length === 0 && text2 === 0) alert("You need to enter id");
+      else {
+        const res = await fetch(`http://localhost:8000/customer/${text.length === 0 ? text2: text}`);
+        const data = await res.json();
+        console.log(data);
+        if (data.length > 0 || Object.keys(data).length > 0) {
+          const res = await fetch(`http://localhost:8000/order/${data.orders[0]}`);
+          const data2 = await res.json()
+          console.log(data2)
+
+          document.getElementById("info").innerHTML = `<div id="output">
+          <div class="bg-white rounded-md">
+            <div>
+  
+              <div class="flex justify-around overflow-scroll lg:overflow-hidden gap-3 lg:gap-0 mt-4 p-5 ">
+                <div>
+                  <small class="text-xs font-bold">Order Date</small><br>
+                  <div class="text-xs">${data2.orderedOn}</div>
+                </div>
+                <div>
+                  <small class="text-xs font-bold">_${data._id}</small><br>
+                  <button class="bg-green-600 rounded-md text-white px-3 py-1 text-xs">Prepaid</button>
+                </div>
+                <div class="text-sm">
+                  <small class="underline text-xs font-bold">Buyer Details:</small>
+                  <br><small>${data.address}</small>
+                  <br><small>${data.city} ${data.state}</small>
+                  <br><small>Phone: ${data.phone} Pincode: ${data.pincode}</small>
+                </div>
+                <div>
+                  <small style="color: red" class="font-bold text-xs">payment awaiting</small>
+                  <br>
+                  <div style="font-weight: 500 " class="text-xs">Total: ${data2.price}</div>
+                </div>
+                <div>
+                  <button style="background: #9e9d9c;"
+                    class="px-3 py-1 text-xs rounded-md text-white font-bold">TRACK</button>
+                </div>
+                <div>
+                  <div style="font-weight: 500; color: blue; text-decoration: underline; " class="text-xs">Generate
+                    invoice</div>
+                </div>
+              </div>
+              <div id="allorders" class="p-5">
+                <div class="shadow-lg  flex gap-10 w-full lg:w-2/4 p-5 border rounded-md text-xs">
+                  <img style="" alt="product image">
+                  ${
+                  data2 ?
+                  `<div>
+                    <a href=${data2.link} class="text-xs text-blue-600">${data2.link.slice(0,30)}...</a>
+                    <div style="display: flex; gap: 10px;">
+                      <div>
+                        <small>Model: ${data2.model}</small><br>
+                        <small>Price: ${data2.price}</small><br>
+                        <small>Date: ${data2.orderedOn}</small><br>
+                        <small>Discount: ${data2.discount}</small>
+                      </div>
+                      <div>
+                        <small>Qty: ${data2.qty}</small><br>
+                        <small>Delivery Charge: ${data2.deliveryCharge}</small><br>
+                        <small>Status: ${data2.status}</small>
+                      </div>
+                    </div>
+                  </div>` :null
+                  }
+                </div>
+  
+              </div>
+            </div>
+          </div>
+        </div>`
+            ;
+        } else {
+          document.getElementById("output").innerHTML =
+            "<small>Nothing to show</small>";
+        }
+      }
+    };
+    document
+      .getElementById("searchBtn")
+      .addEventListener("click", function (event) {
+        event.preventDefault();
+        handleSubmit();
+      });
+    document
+      .getElementById("searchBtn2")
+      .addEventListener("click", function (event) {
+        event.preventDefault();
+        handleSubmit();
+      });
+  </script>
+</html>
